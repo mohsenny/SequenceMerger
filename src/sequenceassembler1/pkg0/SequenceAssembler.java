@@ -40,12 +40,12 @@ import java.util.Random;
  */
 public class SequenceAssembler extends SwingWorker<Integer, Void> 
 {
-    private final File[] inputs;
-    private static int inputSize;
-    private final int window;
-    private final int match;
+    public static File[] inputs;
+    public static int inputSize;
+    public static int window;
+    public static int match;
     //private static JTextArea outputText;
-    private static JTextPane outputText;
+    public static JTextPane outputText;
             
     SequenceAssembler(File[] inputs, int window, int match, JTextPane outputText)
     {
@@ -98,7 +98,7 @@ public class SequenceAssembler extends SwingWorker<Integer, Void>
         Map<Integer, List<String>> new_fragments_keywords = new HashMap<Integer, List<String>>(); 
         
         int iterationNumber = 0;
-        int notNullSize = getMapNotNullSize(fragments_keywords);
+        int notNullSize = Utility.getMapNotNullSize(fragments_keywords);
         boolean cannotBeCombinedAnymore = false;
 
         while (notNullSize >= 1)
@@ -108,31 +108,31 @@ public class SequenceAssembler extends SwingWorker<Integer, Void>
                 if (notNullSize == 1)
                 {
                     // This is the last remaining fragment
-                    List<Integer> indices = getMapNotNullIncides(fragments_keywords);
+                    List<Integer> indices = Utility.getMapNotNullIncides(fragments_keywords);
                     int fragmentID = indices.get(0);
                     int fragmentSize = fragments_keywords.get(fragmentID).size();
-                    String finalStory = makeFinalStory(fragmentID, fragmentSize, helper);
-                    WriteOutput("Final Sotry (plain version) :", Color.RED, 16, true);
-                    WriteOutput(finalStory, Color.DARK_GRAY, 12, true);
-                    WriteOutput("\n", Color.BLACK, 1, true);
-                    WriteOutput("Final Story (colored version)", Color.RED, 16, true);
-                    writeHighlightedResult (finalStory, fragments, pureURIs);
+                    String finalStory = Utility.makeFinalStory(fragmentID, fragmentSize, helper);
+                    Utility.WriteOutput("Final Sotry (plain version) :", Color.RED, 16, true);
+                    Utility.WriteOutput(finalStory, Color.DARK_GRAY, 12, true);
+                    Utility.WriteOutput("\n", Color.BLACK, 1, true);
+                    Utility.WriteOutput("Final Story (colored version)", Color.RED, 16, true);
+                    Utility.writeHighlightedResult (finalStory, fragments, pureURIs);
 
                     return 1;
                 }
                 else
                 {
-                    List<Integer> indices = getMapNotNullIncides(fragments_keywords);
+                    List<Integer> indices = Utility.getMapNotNullIncides(fragments_keywords);
                     // Pick the bigger one
-                    int biggerFragmentIndex = findBiggerFragmentIndex(fragments_keywords, indices);
+                    int biggerFragmentIndex = Utility.findBiggerFragmentIndex(fragments_keywords, indices);
                     int biggerFragmentSize = fragments_keywords.get(biggerFragmentIndex).size();
                     
-                    String finalStory = makeFinalStory(biggerFragmentIndex, biggerFragmentSize, helper);
-                    WriteOutput("Final Sotry (plain version) :", Color.RED, 16, true);
-                    WriteOutput(finalStory, Color.DARK_GRAY, 12, true);
-                    WriteOutput("\n", Color.BLACK, 1, true);
-                    WriteOutput("Final Story (colored version)", Color.RED, 16, true);
-                    writeHighlightedResult (finalStory, fragments, pureURIs);
+                    String finalStory = Utility.makeFinalStory(biggerFragmentIndex, biggerFragmentSize, helper);
+                    Utility.WriteOutput("Final Sotry (plain version) :", Color.RED, 16, true);
+                    Utility.WriteOutput(finalStory, Color.DARK_GRAY, 12, true);
+                    Utility.WriteOutput("\n", Color.BLACK, 1, true);
+                    Utility.WriteOutput("Final Story (colored version)", Color.RED, 16, true);
+                    Utility.writeHighlightedResult (finalStory, fragments, pureURIs);
 
                     return 1;
                 }
@@ -140,20 +140,20 @@ public class SequenceAssembler extends SwingWorker<Integer, Void>
             else if (notNullSize == 2)
             {
                 // If both of them are assembled ones (their indices > num_of_frags) then choose the bigger one
-                List<Integer> indices = getMapNotNullIncides(fragments_keywords);
-                boolean checker = ifResultsAreAllOutputs(indices);
+                List<Integer> indices = Utility.getMapNotNullIncides(fragments_keywords);
+                boolean checker = Utility.ifResultsAreAllOutputs(indices);
                 if (checker)
                 {
                     // Pick the bigger one
-                    int biggerFragmentIndex = findBiggerFragmentIndex(fragments_keywords, indices);
+                    int biggerFragmentIndex = Utility.findBiggerFragmentIndex(fragments_keywords, indices);
                     int biggerFragmentSize = fragments_keywords.get(biggerFragmentIndex).size();
                     
-                    String finalStory = makeFinalStory(biggerFragmentIndex, biggerFragmentSize, helper);
-                    WriteOutput("Final Sotry (plain version) :", Color.RED, 16, true);
-                    WriteOutput(finalStory, Color.BLACK, 12, true);
-                    WriteOutput("\n", Color.BLACK, 1, true);
-                    WriteOutput("Final Story (colored version)", Color.RED, 16, true);
-                    writeHighlightedResult (finalStory, fragments, pureURIs);
+                    String finalStory = Utility.makeFinalStory(biggerFragmentIndex, biggerFragmentSize, helper);
+                    Utility.WriteOutput("Final Sotry (plain version) :", Color.RED, 16, true);
+                    Utility.WriteOutput(finalStory, Color.BLACK, 12, true);
+                    Utility.WriteOutput("\n", Color.BLACK, 1, true);
+                    Utility.WriteOutput("Final Story (colored version)", Color.RED, 16, true);
+                    Utility.writeHighlightedResult (finalStory, fragments, pureURIs);
                     
                     return 1;
                 }
@@ -167,7 +167,7 @@ public class SequenceAssembler extends SwingWorker<Integer, Void>
             }
             
             new_fragments_keywords = runApplication(fragments_keywords, num_of_frags, window_length, match_rule, helper, iterationNumber, outputText);
-            notNullSize = getMapNotNullSize(new_fragments_keywords);
+            notNullSize = Utility.getMapNotNullSize(new_fragments_keywords);
             iterationNumber++;     
             num_of_frags = new_fragments_keywords.size();
             // New window length
@@ -175,7 +175,7 @@ public class SequenceAssembler extends SwingWorker<Integer, Void>
             // New match rule
             match_rule = Math.round((float)(match_rule * matchFactor));
             // Reseting some of lists, sets, etc 
-            PrepareForNextPhase(helper);
+            Utility.PrepareForNextPhase(helper);
         }
         return 1;
     }
@@ -183,21 +183,21 @@ public class SequenceAssembler extends SwingWorker<Integer, Void>
     
     public static Map<Integer, List<String>> runApplication(Map<Integer, List<String>> fragments_keywords, int num_of_frags, int window_length, int match_rule, NLPHelper helper, int iterationNumber, JTextPane outputText) throws Exception
     {
-        WriteOutput("\n", Color.WHITE, 1, true);
-        WriteOutput("\n", Color.WHITE, 1, true);
-        WriteOutput("Iteration number : ", Color.BLACK, 14, false);
-        WriteOutput("" + ++iterationNumber, Color.RED, 14, true);
-        WriteOutput("Window size : ", Color.BLACK, 14,false);
-        WriteOutput("" + window_length, Color.RED, 14, true);
-        WriteOutput("Match size : ", Color.BLACK, 14, false);
-        WriteOutput("" + match_rule, Color.RED, 14, true);
+        Utility.WriteOutput("\n", Color.WHITE, 1, true);
+        Utility.WriteOutput("\n", Color.WHITE, 1, true);
+        Utility.WriteOutput("Iteration number : ", Color.BLACK, 14, false);
+        Utility.WriteOutput("" + ++iterationNumber, Color.RED, 14, true);
+        Utility.WriteOutput("Window size : ", Color.BLACK, 14,false);
+        Utility.WriteOutput("" + window_length, Color.RED, 14, true);
+        Utility.WriteOutput("Match size : ", Color.BLACK, 14, false);
+        Utility.WriteOutput("" + match_rule, Color.RED, 14, true);
         
-        int notNullSize = getMapNotNullSize(fragments_keywords);
+        int notNullSize = Utility.getMapNotNullSize(fragments_keywords);
         
-        WriteOutput("Fragments being processed in this iteration : " , Color.BLACK, 14, false);
-        WriteOutput("" + notNullSize, Color.RED, 14, true);
-        WriteOutput("\n", Color.WHITE, 1, true);
-        WriteOutput("\n", Color.WHITE, 1, true);
+        Utility.WriteOutput("Fragments being processed in this iteration : " , Color.BLACK, 14, false);
+        Utility.WriteOutput("" + notNullSize, Color.RED, 14, true);
+        Utility.WriteOutput("\n", Color.WHITE, 1, true);
+        Utility.WriteOutput("\n", Color.WHITE, 1, true);
 
         List<String> final_result = new ArrayList<>();
 
@@ -263,7 +263,7 @@ public class SequenceAssembler extends SwingWorker<Integer, Void>
                                     //After each match, match_check will be increased by one
                                     int match_checker = 0;
                                     int[][] match_recorder = new int[match_rule][2];
-                                    resetMatchRecorder(match_recorder, match_rule);
+                                    Utility.resetMatchRecorder(match_recorder, match_rule);
 
                                     //Getting rid of the repeatitions in match_recorder (?)
                                     boolean[] match_checking_conditions = new boolean[match_rule * 2];
@@ -335,7 +335,7 @@ public class SequenceAssembler extends SwingWorker<Integer, Void>
                                     {
                                        if (match_checking_conditions[c])
                                        {
-                                            resetMatchRecorder(match_recorder, match_rule);
+                                            Utility.resetMatchRecorder(match_recorder, match_rule);
                                             match_checker = 0;
                                        }
                                     }
@@ -409,22 +409,22 @@ public class SequenceAssembler extends SwingWorker<Integer, Void>
 
                         for (CoreMap sentence : set1)
                         {
-                            WriteOutput(sentence.toString(), Color.BLUE, 12, true); 
+                            Utility.WriteOutput(sentence.toString(), Color.BLUE, 12, true); 
                         }
 
-                        WriteOutput("* has an overlap with *", Color.RED, 14, true);
+                        Utility.WriteOutput("* has an overlap with *", Color.RED, 14, true);
 
                         for (CoreMap sentence : set2)
                         {
-                            WriteOutput(sentence.toString(), Color.BLUE, 12, true); 
+                            Utility.WriteOutput(sentence.toString(), Color.BLUE, 12, true); 
                         }
                         Iterator iter = all_matches.iterator();
                         /*
                         while (iter.hasNext()) {
-                            WriteOutput(iter.next().toString(), Color.GREEN, true);
+                            Utility.WriteOutput(iter.next().toString(), Color.GREEN, true);
                         }
                         */
-                        WriteOutput("------------------------------", Color.BLACK, 12, true);
+                        Utility.WriteOutput("------------------------------", Color.BLACK, 12, true);
                     }
                     //assemblingProcFragments stores all the assemblable fragments
                     if (hasOverlapsHappened)
@@ -449,10 +449,10 @@ public class SequenceAssembler extends SwingWorker<Integer, Void>
         // Printing and testing
         
         
-        WriteOutput("Combined fragments", Color.RED, 14, true);
+        Utility.WriteOutput("Combined fragments", Color.RED, 14, true);
         for (int i = 0; i < helper.assemblingPath.size() - 1; i++)
         {
-            WriteOutput(helper.assemblingPath.get(i) + " - " + helper.assemblingPath.get(i+1), Color.BLUE, 12, true);
+            Utility.WriteOutput(helper.assemblingPath.get(i) + " - " + helper.assemblingPath.get(i+1), Color.BLUE, 12, true);
         }
             
         
@@ -469,7 +469,7 @@ public class SequenceAssembler extends SwingWorker<Integer, Void>
                 int host = helper.assemblingPath.get(i);
                 int trav = helper.assemblingPath.get(i+1);
 
-                int j = findSimilarePairIndex(host, trav, helper.similareFragments);
+                int j = Utility.findSimilarePairIndex(host, trav, helper.similareFragments);
 
                 /* 
                 i.e: A - B - C - D - E : size = 5 
@@ -510,7 +510,7 @@ public class SequenceAssembler extends SwingWorker<Integer, Void>
                 {
                     int next_host = trav;
                     int next_trav = helper.assemblingPath.get(i+2);
-                    int new_j = findSimilarePairIndex(next_host, next_trav, helper.similareFragments);
+                    int new_j = Utility.findSimilarePairIndex(next_host, next_trav, helper.similareFragments);
                     // check if new_j is negative or positive, to know if host-trav is there or trav-host
                     if (new_j < 0)
                     {
@@ -631,338 +631,5 @@ public class SequenceAssembler extends SwingWorker<Integer, Void>
         return fragments_keywords;
     }
     
-    public static void resetMatchRecorder(int[][] match_recorder, int match_rule){ 
-        for (int i = 0; i < match_rule; i++)
-        {
-            match_recorder[i][0] = -1;
-            match_recorder[i][1] = -1;
-        }
-    }
-    
-    public static int getMapNotNullSize(Map<Integer, List<String>> map)
-    {
-        int size = 0;
-        Iterator it = map.entrySet().iterator();
-        while (it.hasNext()) {
-            Map.Entry pair = (Map.Entry)it.next();
-            List<String> val = (List)pair.getValue();
-            if (pair.getValue() != null && val.size() != 0)
-            {
-                size++;
-            }
-        }
-        
-        return size;
-    }
-    
-    public static boolean ifResultsAreAllOutputs(List<Integer> indices)
-    {
-        boolean checker = true;
-        for (int i = 0; i < indices.size(); i++)
-        {
-            if (indices.get(i) <= inputSize - 1)
-            {
-                checker = false;
-                return checker;
-            }
-            else
-            {
-                continue;
-            }
-        }
-        
-        return checker;
-    }
-    
-    public static int findBiggerFragmentIndex(Map <Integer, List<String>> map, List<Integer> notNullIndices)
-    {
-        int biggerFragmentID = 0;
-        int biggestSizeSoFar = 0;
-        int currentSize = 0;
-        for (int i = 0; i < notNullIndices.size(); i++)
-        {
-            int currentFragmentIndex = notNullIndices.get(i);
-            currentSize = map.get(currentFragmentIndex).size();
-            if (currentSize > biggestSizeSoFar)
-            {
-                biggerFragmentID = currentFragmentIndex;
-                biggestSizeSoFar = currentSize;
-            }
-        }
-        
-        return biggerFragmentID;
-    }
-    
-    public static List<Integer> getMapNotNullIncides(Map <Integer, List<String>> map)
-    {
-        List<Integer> indices = new ArrayList<Integer>();
-        
-        Iterator it = map.entrySet().iterator();
-        while (it.hasNext()) {
-            Map.Entry pair = (Map.Entry)it.next();
-            if (pair.getValue() != null)
-            {
-                indices.add((Integer)pair.getKey());
-            }
-        }
-        return indices;
-    }
-    
-    public static void PrepareForNextPhase(NLPHelper helper)
-    {
-        helper.Seqs_keys.clear();
-        helper.Seqs_values.clear();
-    }
-    
-    public static int findSimilarePairIndex(int host, int trav, List<String> SimilareFragments)
-    {
-        int result_index = 0;
-        
-        String key_1 = host + "-" + trav;
-        String key_2 = trav + "-" + host;
-                    
-        for (int z = 0; z < SimilareFragments.size(); z++)
-        {
-            String fragmentPair = SimilareFragments.get(z);
-            if (fragmentPair.equals(key_1))
-            {
-                result_index = z;
-                break;
-            }
-            else if (fragmentPair.equals(key_2))
-            {
-                // Return -z; only to show that 
-                result_index = z * -1;
-                break;
-            }
-        }
-        
-        return result_index;
-    }
-    
-    private static void WriteOutput(String msg, Color c, int size, boolean newLine)
-    {
-        StyleContext sc = StyleContext.getDefaultStyleContext();
-        AttributeSet aset = sc.addAttribute(SimpleAttributeSet.EMPTY, StyleConstants.Foreground, c);
-
-        aset = sc.addAttribute(aset, StyleConstants.FontFamily, "Lucida Console");
-        aset = sc.addAttribute(aset, StyleConstants.Alignment, StyleConstants.ALIGN_JUSTIFIED);
-        aset = sc.addAttribute(aset, StyleConstants.Size, size);
-
-        int len = outputText.getDocument().getLength();
-        outputText.setCaretPosition(len);
-        outputText.setCharacterAttributes(aset, false);
-        if (newLine)
-            outputText.replaceSelection(msg + "\n");
-        else
-            outputText.replaceSelection(msg);
-    }
-    
-    private static String makeFinalStory(int fragmentID, int fragmentTokensCount, NLPHelper helper )
-    {
-        List<String> final_result = new ArrayList<>();
-        
-        for (int token = 0; token < fragmentTokensCount ; token++)
-        {
-            final_result.add(helper.fragmentsKeyowrdSetntenceMapper.get(fragmentID).get(token).toString());
-        }
-        
-        HashSet<String> final_result_unique = new LinkedHashSet<>();
-        
-        String final_result_str = "";
-        for (String s : final_result){
-            final_result_unique.add(s);
-        }
-        // Creating a string from final_result_unique
-        for (String s : final_result_unique){
-            final_result_str += s;
-        }  
-        
-        return final_result_str;
-    }
-            
-    private static void writeHighlightedResult (String finalStory, List<String> fragments, List<String> pureURIs) throws IOException
-    {
-        Map<Integer, int[]> colors = new HashMap<Integer, int[]>();
-        InitialColorsManually(colors);
-        
-        finalStory = finalStory.replaceAll("\\.","\\. ");
-        finalStory = finalStory.replaceAll("\\,","\\, ");
-        //String ResultWords[] = finalStory.split("[\\n\\s+]");
-        String ResultWords[] = finalStory.split("\\s+");
-        List<String> WordsList = Arrays.asList(ResultWords);
-        ListIterator<String> wordsIter = WordsList.listIterator();
-        
-        String currentFragment;
-        
-        while (wordsIter.hasNext())
-        {
-            String currentSearchKey = "";
-            int[] occurances = new int[inputSize];
-            String[] occurancesStrings = new String[inputSize];
-            
-            if (!wordsIter.hasPrevious())   // Otherwise,it has already gone to the next one in the last loop (fail search)
-            {
-                currentSearchKey += wordsIter.next();
-            }
-            for (int f = 0; f < inputSize; f++)
-            {
-                currentFragment = readFile(pureURIs.get(f), Charset.defaultCharset());
-                //currentFragment = currentFragment.replaceAll("\\n", "\\. ");
-                currentFragment = currentFragment.replaceAll("\\s{2,}", " ");
-                
-                String currentFragmentTemp = currentFragment.replaceAll("\\.", "");
-                String currentSearchKeyTemp = currentSearchKey;
-                
-                while (currentFragmentTemp.toLowerCase().contains(currentSearchKeyTemp.toLowerCase()))
-                //while(currentFragment.toLowerCase().matches())
-                {
-                    occurancesStrings[f] = currentSearchKey;
-                    occurances[f]++;
-                    if (wordsIter.hasNext())
-                    {
-                        if (currentSearchKey.length() > 0)
-                        {
-                            currentSearchKey += " "+wordsIter.next();
-                        }
-                        else
-                        {
-                            //in case of being the first searchKey of each iteration
-                            currentSearchKey += wordsIter.next();
-                        }
-                        currentSearchKeyTemp = currentSearchKey.replaceAll("\\.", "");
-                    }
-                    else
-                    {
-                        // If there is no more word in the finalResult to be highlighted, then print it all out
-                        break;
-                    }
-                }
-            }
-            // There is no need to do the following if it's the last one.
-            if (wordsIter.hasNext())
-            {
-                // Move the iterator one step backward, since in the last step we went forward once and it didn't match
-                wordsIter.previous();
-            }
-            int fragWithHighOccur = findMaxIndex(occurances);
-            int[] RGBcolor = colors.get(fragWithHighOccur);
-            float[] HSBcolor = Color.RGBtoHSB(RGBcolor[0], RGBcolor[1], RGBcolor[2], null);
-            Color color = Color.getHSBColor(HSBcolor[0], HSBcolor[1], HSBcolor[2]);
-            if (occurancesStrings[fragWithHighOccur] == "" || occurancesStrings[fragWithHighOccur] == " ")
-            {
-                //Highlighting process has failed
-                WriteOutput("[Due to not considering proper spacing and/or punctuation, highlighting process cannot go any further.]", Color.RED, 14, false); 
-                return;
-            }
-            else
-            {
-                WriteOutput(occurancesStrings[fragWithHighOccur], color, 12, false); 
-            }
-        
-        }
-        
-        printColorMap(colors);
-    }
-    
-    private static void InitialColors (Map<Integer, int[]> colors)
-    {
-        Random rand;
-        //Color randomColor;
-        int r;
-        int g;
-        int b;
-        
-        for (int i = 0; i < inputSize; i++)
-        {
-            rand = new Random();
-            //{
-                r = rand.nextInt(200);
-                g = rand.nextInt(200);
-                b = rand.nextInt(200);
-            //}while(r < 200 && g < 200 && b < 200)   // Make sure colors are readable and not too bright
-            //randomColor = new Color(r, g, b);
-            int[] randomColor = {r, g, b};
-            colors.put(i, randomColor);
-        }
-    }
-    
-    private static void InitialColorsManually (Map<Integer, int[]> colors)
-    {
-        colors.put(0, new int[] {102, 0, 0});
-        colors.put(1, new int[] {76, 153, 0});
-        colors.put(2, new int[] {0, 255, 255});
-        colors.put(3, new int[] {255, 102, 178});
-        colors.put(4, new int[] {0, 0, 0});
-        colors.put(5, new int[] {102, 51, 255});
-        colors.put(6, new int[] {229, 204, 0});
-        colors.put(7, new int[] {255, 0, 255});
-        colors.put(8, new int[] {255, 0, 0});
-        colors.put(9, new int[] {0, 204, 0});
-        
-        colors.put(10, new int[] {102, 102, 255});
-        colors.put(11, new int[] {0, 102, 102});
-        colors.put(12, new int[] {0, 153, 153});
-        colors.put(13, new int[] {255, 255, 0});
-        colors.put(14, new int[] {102, 178, 255});
-        colors.put(15, new int[] {255, 102, 178});
-        colors.put(16, new int[] {0, 76, 153});
-        colors.put(17, new int[] {96, 96, 96});
-        colors.put(18, new int[] {153, 153, 0});
-        colors.put(19, new int[] {255, 153, 153});
-        
-        colors.put(20, new int[] {153, 255, 51});
-        colors.put(21, new int[] {204, 255, 204});
-        //colors.put(0, new int[] {102, 0, 0});
-        //colors.put(0, new int[] {102, 0, 0});
-        //colors.put(0, new int[] {102, 0, 0});
-        //colors.put(0, new int[] {102, 0, 0});
-        //colors.put(0, new int[] {102, 0, 0});
-        //colors.put(0, new int[] {102, 0, 0});
-        //colors.put(0, new int[] {102, 0, 0});
-    }
-    
-    static String readFile(String path, Charset encoding) 
-    throws IOException 
-    {
-        byte[] encoded = Files.readAllBytes(Paths.get(path));
-        return new String(encoded, encoding);
-    }
-    
-    static int findMaxIndex(int[] occurances)
-    {
-        int maxValue = 0;
-        int maxIndex = 0;
-        for (int i = 0; i < occurances.length; i++)
-        {
-            if (occurances[i] > maxValue)
-            {
-                maxValue = occurances[i];
-                maxIndex = i;
-            }
-        }
-        return maxIndex;    
-    }
-    
-    static void printColorMap(Map<Integer, int[]> colors)
-    {
-        WriteOutput("\n", Color.RED, 1, true);
-        WriteOutput("\n", Color.RED, 1, true);
-        Integer fragmentID;
-        WriteOutput("Inputs' color map :", Color.RED, 14, true);
-        for (Entry<Integer, int[]> entry : colors.entrySet())
-        {
-            fragmentID = entry.getKey();
-            if   (fragmentID < inputSize){
-                fragmentID++;
-                int[] RGBcolor = entry.getValue();
-
-                float[] HSBcolor = Color.RGBtoHSB(RGBcolor[0], RGBcolor[1], RGBcolor[2], null);
-                Color color = Color.getHSBColor(HSBcolor[0], HSBcolor[1], HSBcolor[2]);
-
-                WriteOutput("Inputs " + fragmentID.toString() , color, 12, true);
-            }
-        }
-    }
 
 }
