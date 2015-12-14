@@ -627,19 +627,7 @@ public class SequenceAssembler extends SwingWorker<Integer, Void>
         }
         //Add 
         fragments_keywords.put(num_of_frags, helper.getKeywords(null, final_result_str, num_of_frags + 1, 2));
-        /*
-        for (String s : final_result_unique) {
-            WriteOutput(s, Color.DARK_GRAY, true);
-        }
-        */
-        /*
-        for (int i = 0; i < helper.Seqs_keys.size(); i++)
-        {
-             String key = helper.Seqs_keys.get(i).toString();
-             String value = helper.Seqs_values.get(i).toString();
-             WriteOutput(key + " " + value, Color.BLUE, true);
-        }
-        */
+        
         return fragments_keywords;
     }
     
