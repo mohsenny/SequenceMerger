@@ -78,11 +78,18 @@ public class NLPHelper {
     public List<CoreMap> getSentences(String str) throws IOException{
         
         String text = str;
+        List<CoreMap> sentences = new ArrayList<CoreMap>();
         
-        Annotation document  = new Annotation(text);
-        this.pipeline.annotate(document);
+        try {
+            Annotation document  = new Annotation(text);
+            this.pipeline.annotate(document);
+
+            sentences = document.get(CoreAnnotations.SentencesAnnotation.class);
+        }
+        catch(Exception e)
+        {
         
-        List<CoreMap> sentences = document.get(CoreAnnotations.SentencesAnnotation.class);
+        }
         return sentences;
     }
     
