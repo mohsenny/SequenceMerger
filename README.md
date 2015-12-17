@@ -1,7 +1,7 @@
 # SequenceAssembler (version alpha)
 
 This is the Java code for the application behind my M.Sc. thesis in Information Technology, "Sequence Assembler for Digital Storytelling".
-Sequence Assembler takes some texts fragments and two parameters of W and M as its inputs, and the output is what we call the overall story resulted by merging those fragments.
+Sequence Assembler takes some text documents (something we refer to as Fragments) and two parameters of W and M as its inputs, and the output is what we call the "Overall Story", resulted by merging those fragments.
 
 Other libraries/JARs which must be imported, but are not included in the repository are:
 
