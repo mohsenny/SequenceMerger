@@ -77,7 +77,7 @@ public class NLPHelper {
      
     public List<CoreMap> getSentences(String str) throws IOException{
         
-        String text = str;
+        String text = normalaizeString(str);
         List<CoreMap> sentences = new ArrayList<CoreMap>();
         
         try {
@@ -141,7 +141,10 @@ public class NLPHelper {
         if (flag == 1)
             sentences = getSentences(path);
         else
+        {
+            input = normalaizeString(input);
             sentences = getSentences(input);
+        }
             
         List<String> Keywords = new ArrayList<String>();
         //Maps keywords to the sentence they belong too
@@ -165,7 +168,9 @@ public class NLPHelper {
                 //System.out.printf("%s\n%s\n%s\n\n\n", word, pos, ne);
                           
                 //if (pos.equals("NNP") || pos.equals("NN") || pos.equals("NNS") || pos.equals("NNPS") || pos.equals("CD") && !ne.equals("PERSON")){
-                if (pos.equals("NNP") || pos.equals("NN") || pos.equals("NNS") || pos.equals("NNPS") || pos.equals("CD") || pos.equals("VB")  || ne.equals("PERSON") || pos.equals("VBD")  || pos.equals("VBG")  || pos.equals("VBN")  ){
+                if (pos.equals("NNP") || pos.equals("NN") || pos.equals("NNS") || pos.equals("NNPS") ||
+                        pos.equals("CD") || pos.equals("VB")  || ne.equals("PERSON") || pos.equals("VBD")  || 
+                        pos.equals("VBG")  || pos.equals("VBN")  ){
                     //keywords.add(word + " - " + pos + " - " + ne);
                     keywordSentenceMapper.put(keyword_counter, sentence);
                     keyword_counter++;
@@ -445,6 +450,19 @@ public class NLPHelper {
             assemblingPath.add(iter.next());
         }
     }
-    
-    
+    /**
+    * Returns a String with proper spacing after end of sentence
+    * @param text The original text that might contain incorrect spacing
+    */
+    public String normalaizeString(String text)
+    {
+        String normalizedText;
+        normalizedText = text.replaceAll("\\.(?!\\s)", ". ");
+        //normalizedText = normalizedText.replaceAll("..", ".");
+        //normalizedText = normalizedText.replaceAll("\\s{2,}", " ");
+        //normalizedText = text.replaceAll(". ", ".");
+        //text = normalizedText.replaceAll(".", ". ");
+        //normalizedText = text;
+        return normalizedText;
+    }
 }

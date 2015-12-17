@@ -192,9 +192,11 @@ public class Utility extends SequenceAssembler{
     {
         Map<Integer, int[]> colors = new HashMap<Integer, int[]>();
         InitialColorsManually(colors);
-        
-        finalStory = finalStory.replaceAll("\\.","\\. ");
-        finalStory = finalStory.replaceAll("\\,","\\, ");
+
+        NLPHelper helper = new NLPHelper();
+        finalStory = helper.normalaizeString(finalStory);
+        //finalStory = finalStory.replaceAll("\\.","\\. ");
+        //finalStory = finalStory.replaceAll("\\,","\\, ");
         //String ResultWords[] = finalStory.split("[\\n\\s+]");
         String ResultWords[] = finalStory.split("\\s+");
         List<String> WordsList = Arrays.asList(ResultWords);
@@ -216,9 +218,10 @@ public class Utility extends SequenceAssembler{
             {
                 currentFragment = readFile(pureURIs.get(f), Charset.defaultCharset());
                 //currentFragment = currentFragment.replaceAll("\\n", "\\. ");
-                currentFragment = currentFragment.replaceAll("\\s{2,}", " ");
+                //currentFragment = currentFragment.replaceAll("\\s{2,}", " ");
                 
-                String currentFragmentTemp = currentFragment.replaceAll("\\.", "");
+                //String currentFragmentTemp = currentFragment.replaceAll("\\.", "");
+                String currentFragmentTemp = currentFragment;
                 String currentSearchKeyTemp = currentSearchKey;
                 
                 while (currentFragmentTemp.toLowerCase().contains(currentSearchKeyTemp.toLowerCase()))
@@ -237,7 +240,8 @@ public class Utility extends SequenceAssembler{
                             //in case of being the first searchKey of each iteration
                             currentSearchKey += wordsIter.next();
                         }
-                        currentSearchKeyTemp = currentSearchKey.replaceAll("\\.", "");
+                        //currentSearchKeyTemp = currentSearchKey.replaceAll("\\.", "");
+                        currentSearchKeyTemp = currentSearchKey;
                     }
                     else
                     {

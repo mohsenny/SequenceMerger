@@ -217,7 +217,7 @@ public class SequenceAssembler extends SwingWorker<Integer, Void>
             i_array = fragments_keywords.get(i);
             
             // that element of fragments_keywords has removed before in previous phases
-            if (i_array == null)
+            if (i_array == null || i_array.size() < window_length)
             {
                 continue;
             }
@@ -234,10 +234,8 @@ public class SequenceAssembler extends SwingWorker<Integer, Void>
                     j_array = fragments_keywords.get(j);
                     
                     //that element of fragments_keywords has removed before in previous phases
-                    if (j_array == null)
+                    if (j_array == null|| j_array.size() < window_length)
                     {
-                        //helper.Seqs_keys.removeAll(Collections.singleton(i));
-                        //helper.Seqs_values.removeAll(Collections.singleton(i));
                         continue;
                     }
 
@@ -322,7 +320,8 @@ public class SequenceAssembler extends SwingWorker<Integer, Void>
                                         {
                                             if (c_t > c_h)
                                             {
-                                                if (match_recorder[c_h][0] == match_recorder[c_t][0] || match_recorder[c_h][1] == match_recorder[c_t][1])
+                                                if (match_recorder[c_h][0] == match_recorder[c_t][0] || 
+                                                        match_recorder[c_h][1] == match_recorder[c_t][1])
                                                 {
                                                     match_checking_conditions[condition_counter] = true;
                                                 }
@@ -531,7 +530,7 @@ public class SequenceAssembler extends SwingWorker<Integer, Void>
                 int last_trav_high = 0;
 
                 // Just in case there's not any space between two combined fragments.
-                final_result.add(" ");
+                //final_result.add(" ");
                     
                 // If <B1BbB2> has used before, no need to check <BbCa> anymore, since Bb is used already
                 // and we go straight to the part that we add B2
@@ -565,7 +564,7 @@ public class SequenceAssembler extends SwingWorker<Integer, Void>
                             }  
                         }
                         last_trav_high = trav_high;
-                        final_result.add(".");
+                        //final_result.add(".");
                     }
                     // All other iterations
                     else
@@ -592,7 +591,7 @@ public class SequenceAssembler extends SwingWorker<Integer, Void>
                             }  
                         }
                         last_trav_high = trav_high;
-                        final_result.add(".");
+                        //final_result.add(".");
                     }
                 }
                 else
@@ -606,7 +605,7 @@ public class SequenceAssembler extends SwingWorker<Integer, Void>
                 {
                     final_result.add(helper.fragmentsKeyowrdSetntenceMapper.get(host).get(token).toString());
                 } 
-                final_result.add(".");
+                //final_result.add(".");
             }
         }
         
@@ -625,6 +624,8 @@ public class SequenceAssembler extends SwingWorker<Integer, Void>
         {
             fragments_keywords.put(helper.assemblingPath.get(path_i), null);
         }
+        // Normalization
+        final_result_str = helper.normalaizeString(final_result_str);
         //Add 
         fragments_keywords.put(num_of_frags, helper.getKeywords(null, final_result_str, num_of_frags + 1, 2));
         
