@@ -18,4 +18,4 @@ M (Match) MUST be smaller that W (Window)
 If you are studying in University of Eastern Finland and are looking for more information regarding this applicaiton,
 please refer to my IT project "Sequence Assembler for Digital Storytelling" written by me, Mohsen Nasiri on Autumn of 2015.
 
-Any usage or furthure development of this code with the purpose of education or futhur development is allowed.	
+Any usage of this code with the purpose of education or futhur development is allowed. For other purposes please send an Email to mohsen.n89@gmail.com.
