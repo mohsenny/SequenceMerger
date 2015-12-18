@@ -9,30 +9,19 @@ package sequenceassembler1.pkg0;
 import edu.stanford.nlp.util.CoreMap; 
 import java.awt.Color;
 import java.io.File;
-import java.io.IOException;
 import java.net.URI;
-import java.nio.charset.Charset;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.ListIterator;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Set;
 import javax.swing.JTextPane;
 import javax.swing.SwingWorker;
-import javax.swing.text.AttributeSet;
-import javax.swing.text.SimpleAttributeSet;
-import javax.swing.text.StyleConstants;
-import javax.swing.text.StyleContext;
-import java.util.Random;
 
 /**
  *
@@ -59,6 +48,11 @@ public class SequenceAssembler extends SwingWorker<Integer, Void>
     @Override
     protected Integer doInBackground() throws Exception 
     {
+        Long begingTime;
+        //Long endTime;
+        Date date = new Date();
+        begingTime = date.getTime();
+        
         int num_of_frags = inputs.length;
         int window_length = window;
         int match_rule = match;
@@ -117,7 +111,8 @@ public class SequenceAssembler extends SwingWorker<Integer, Void>
                     Utility.WriteOutput("\n", Color.BLACK, 1, true);
                     Utility.WriteOutput("Final Story (colored version)", Color.RED, 16, true);
                     Utility.writeHighlightedResult (finalStory, fragments, pureURIs);
-
+                    
+                    Utility.printRunningTime(begingTime);
                     return 1;
                 }
                 else
@@ -133,7 +128,8 @@ public class SequenceAssembler extends SwingWorker<Integer, Void>
                     Utility.WriteOutput("\n", Color.BLACK, 1, true);
                     Utility.WriteOutput("Final Story (colored version)", Color.RED, 16, true);
                     Utility.writeHighlightedResult (finalStory, fragments, pureURIs);
-
+                    
+                    Utility.printRunningTime(begingTime);
                     return 1;
                 }
             }
@@ -155,6 +151,7 @@ public class SequenceAssembler extends SwingWorker<Integer, Void>
                     Utility.WriteOutput("Final Story (colored version)", Color.RED, 16, true);
                     Utility.writeHighlightedResult (finalStory, fragments, pureURIs);
                     
+                    Utility.printRunningTime(begingTime);
                     return 1;
                 }
                 else

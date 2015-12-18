@@ -6,13 +6,13 @@
 package sequenceassembler1.pkg0;
 
 import java.awt.Color;
-import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -21,7 +21,6 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
 import java.util.Random;
-import javax.swing.JTextPane;
 import javax.swing.text.AttributeSet;
 import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyleConstants;
@@ -376,4 +375,29 @@ public class Utility extends SequenceAssembler{
         }
     }
     
+    public static long getRunningTime(long beginTime)
+    {
+        Date date = new Date();
+        long currentTime = date.getTime();
+        
+        long runningTime = currentTime - beginTime;
+        return runningTime;
+    }
+    
+    public static void printRunningTime(long beginTime)
+    {
+        long endTime = getRunningTime(beginTime);
+        endTime = endTime / 1000;
+        long minutes = endTime / 60;
+        long seconds = endTime % 60;
+        String endTimeString = "";
+        if (minutes > 0)
+        {
+            endTimeString += Long.toString(minutes) + " minute(s)";
+        }
+        endTimeString += Long.toString(seconds) + " second(s)";
+        
+        WriteOutput("Total running time: ", Color.red, 12, false);
+        WriteOutput(endTimeString, Color.red, 12, true);
+    }
 }
