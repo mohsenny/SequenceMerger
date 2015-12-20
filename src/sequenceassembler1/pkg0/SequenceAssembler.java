@@ -48,10 +48,10 @@ public class SequenceAssembler extends SwingWorker<Integer, Void>
     @Override
     protected Integer doInBackground() throws Exception 
     {
-        Long begingTime;
+        Long startingTime;
         //Long endTime;
         Date date = new Date();
-        begingTime = date.getTime();
+        startingTime = date.getTime();
         
         int num_of_frags = inputs.length;
         int window_length = window;
@@ -106,13 +106,7 @@ public class SequenceAssembler extends SwingWorker<Integer, Void>
                     int fragmentID = indices.get(0);
                     int fragmentSize = fragments_keywords.get(fragmentID).size();
                     String finalStory = Utility.makeFinalStory(fragmentID, fragmentSize, helper);
-                    Utility.WriteOutput("Final Sotry (plain version) :", Color.RED, 16, true);
-                    Utility.WriteOutput(finalStory, Color.DARK_GRAY, 12, true);
-                    Utility.WriteOutput("\n", Color.BLACK, 1, true);
-                    Utility.WriteOutput("Final Story (colored version)", Color.RED, 16, true);
-                    Utility.writeHighlightedResult (finalStory, fragments, pureURIs);
-                    
-                    Utility.printRunningTime(begingTime);
+                    Utility.printResults(finalStory, fragments, pureURIs, startingTime);
                     return 1;
                 }
                 else
@@ -121,15 +115,8 @@ public class SequenceAssembler extends SwingWorker<Integer, Void>
                     // Pick the bigger one
                     int biggerFragmentIndex = Utility.findBiggerFragmentIndex(fragments_keywords, indices);
                     int biggerFragmentSize = fragments_keywords.get(biggerFragmentIndex).size();
-                    
                     String finalStory = Utility.makeFinalStory(biggerFragmentIndex, biggerFragmentSize, helper);
-                    Utility.WriteOutput("Final Sotry (plain version) :", Color.RED, 16, true);
-                    Utility.WriteOutput(finalStory, Color.DARK_GRAY, 12, true);
-                    Utility.WriteOutput("\n", Color.BLACK, 1, true);
-                    Utility.WriteOutput("Final Story (colored version)", Color.RED, 16, true);
-                    Utility.writeHighlightedResult (finalStory, fragments, pureURIs);
-                    
-                    Utility.printRunningTime(begingTime);
+                    Utility.printResults(finalStory, fragments, pureURIs, startingTime);
                     return 1;
                 }
             }
@@ -143,15 +130,8 @@ public class SequenceAssembler extends SwingWorker<Integer, Void>
                     // Pick the bigger one
                     int biggerFragmentIndex = Utility.findBiggerFragmentIndex(fragments_keywords, indices);
                     int biggerFragmentSize = fragments_keywords.get(biggerFragmentIndex).size();
-                    
                     String finalStory = Utility.makeFinalStory(biggerFragmentIndex, biggerFragmentSize, helper);
-                    Utility.WriteOutput("Final Sotry (plain version) :", Color.RED, 16, true);
-                    Utility.WriteOutput(finalStory, Color.BLACK, 12, true);
-                    Utility.WriteOutput("\n", Color.BLACK, 1, true);
-                    Utility.WriteOutput("Final Story (colored version)", Color.RED, 16, true);
-                    Utility.writeHighlightedResult (finalStory, fragments, pureURIs);
-                    
-                    Utility.printRunningTime(begingTime);
+                    Utility.printResults(finalStory, fragments, pureURIs, startingTime);
                     return 1;
                 }
                 else
@@ -231,7 +211,7 @@ public class SequenceAssembler extends SwingWorker<Integer, Void>
                     j_array = fragments_keywords.get(j);
                     
                     //that element of fragments_keywords has removed before in previous phases
-                    if (j_array == null|| j_array.size() < window_length)
+                    if (j_array == null|| j_array.size() < match_rule)
                     {
                         continue;
                     }
@@ -443,12 +423,16 @@ public class SequenceAssembler extends SwingWorker<Integer, Void>
         helper.assemblingPathFinder(helper.Seqs_keys, helper.Seqs_values, num_of_frags);
         
         // Printing and testing
-        
-        
-        Utility.WriteOutput("Combined fragments", Color.RED, 14, true);
-        for (int i = 0; i < helper.assemblingPath.size() - 1; i++)
+        if (helper.assemblingPath.size() > 0){
+            Utility.WriteOutput("Combined fragments", Color.RED, 14, true);
+            for (int i = 0; i < helper.assemblingPath.size() - 1; i++)
+            {
+                Utility.WriteOutput(helper.assemblingPath.get(i) + " - " + helper.assemblingPath.get(i+1), Color.BLUE, 12, true);
+            }
+        }
+        else
         {
-            Utility.WriteOutput(helper.assemblingPath.get(i) + " - " + helper.assemblingPath.get(i+1), Color.BLUE, 12, true);
+            Utility.WriteOutput("None of the fragments could be merged with current criteria", Color.BLUE, 14, true);
         }
             
         
@@ -484,7 +468,8 @@ public class SequenceAssembler extends SwingWorker<Integer, Void>
 
                 if (j < 0)
                 {
-                    j = Math.abs(j);
+                    // Refer to findSimilarePairIndex() for more information.
+                    j = Math.abs(j+1);
                     host_low = Integer.parseInt(helper.assemblingProcLowBounderies.get(j).split("-")[1]);
                     host_high = Integer.parseInt(helper.assemblingProcHighBounderies.get(j).split("-")[1]);
                     trav_low = Integer.parseInt(helper.assemblingProcLowBounderies.get(j).split("-")[0]);
@@ -492,6 +477,8 @@ public class SequenceAssembler extends SwingWorker<Integer, Void>
                 }
                 else
                 {
+                    // Refer to findSimilarePairIndex() for more information.
+                    j = j -1;
                     host_low = Integer.parseInt(helper.assemblingProcLowBounderies.get(j).split("-")[0]);
                     host_high = Integer.parseInt(helper.assemblingProcHighBounderies.get(j).split("-")[0]);
                     trav_low = Integer.parseInt(helper.assemblingProcLowBounderies.get(j).split("-")[1]);
@@ -606,25 +593,29 @@ public class SequenceAssembler extends SwingWorker<Integer, Void>
             }
         }
         
-        HashSet<String> final_result_unique = new LinkedHashSet<>();
-        String final_result_str = "";
-        for (String s : final_result){
-            final_result_unique.add(s);
-        }
-        // Creating a string from final_result_unique
-        for (String s : final_result_unique){
-            final_result_str += s;
-        }
-        
-        // Remove 'assemblingPath' from 'fragments'
-        for (int path_i = 0; path_i < helper.assemblingPath.size(); path_i++)
+        // If a new story is made
+        if (final_result.size() > 0)
         {
-            fragments_keywords.put(helper.assemblingPath.get(path_i), null);
+            HashSet<String> final_result_unique = new LinkedHashSet<>();
+            String final_result_str = "";
+            for (String s : final_result){
+                final_result_unique.add(s);
+            }
+            // Creating a string from final_result_unique
+            for (String s : final_result_unique){
+                final_result_str += s;
+            }
+
+            // Remove 'assemblingPath' from 'fragments'
+            for (int path_i = 0; path_i < helper.assemblingPath.size(); path_i++)
+            {
+                fragments_keywords.put(helper.assemblingPath.get(path_i), null);
+            }
+            // Normalization
+            final_result_str = helper.normalaizeString(final_result_str);
+            //Add 
+            fragments_keywords.put(num_of_frags, helper.getKeywords(null, final_result_str, num_of_frags + 1, 2));
         }
-        // Normalization
-        final_result_str = helper.normalaizeString(final_result_str);
-        //Add 
-        fragments_keywords.put(num_of_frags, helper.getKeywords(null, final_result_str, num_of_frags + 1, 2));
         
         return fragments_keywords;
     }

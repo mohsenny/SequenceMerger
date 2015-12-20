@@ -132,13 +132,15 @@ public class Utility extends SequenceAssembler{
             String fragmentPair = SimilareFragments.get(z);
             if (fragmentPair.equals(key_1))
             {
-                result_index = z;
+                // Why +1? Because if the answer is the 0th element, then there is no such thing as +0/-0.
+                // instead we return +1/-1, and then, after the sign was resloved, we make it 0;
+                result_index = z + 1;
                 break;
             }
             else if (fragmentPair.equals(key_2))
             {
                 // Return -z; only to show that 
-                result_index = z * -1;
+                result_index = (z * -1) -1;
                 break;
             }
         }
@@ -227,6 +229,11 @@ public class Utility extends SequenceAssembler{
                 //while(currentFragment.toLowerCase().matches())
                 {
                     occurancesStrings[f] = currentSearchKey;
+                    if (occurances[f] == 0)
+                    {
+                        // Then fill it with the current max key length that's already found
+                        occurances[f] = occurances[findMaxIndex(occurances)];
+                    }
                     occurances[f]++;
                     if (wordsIter.hasNext())
                     {
@@ -393,11 +400,45 @@ public class Utility extends SequenceAssembler{
         String endTimeString = "";
         if (minutes > 0)
         {
-            endTimeString += Long.toString(minutes) + " minute(s)";
+            endTimeString += Long.toString(minutes) + " minute(s) and ";
         }
         endTimeString += Long.toString(seconds) + " second(s)";
         
         WriteOutput("Total running time: ", Color.red, 12, false);
         WriteOutput(endTimeString, Color.red, 12, true);
+    }
+    
+    public static int getStoryWordCount(String story)
+    {
+        String trim = story.trim();
+        if (trim.isEmpty())
+            return 0;
+        return trim.split("\\s+").length;
+    }
+    
+    public static void printStoryWordCount(String story)
+    {
+        int wordCount = getStoryWordCount(story);
+        WriteOutput("Total word count: ", Color.red, 12, false);
+        WriteOutput(Integer.toString(wordCount) , Color.red, 12, true);
+    }
+    
+    public static void printResults(String finalStory, List<String> fragments, List<String> pureURIs, long startingTime)
+    {
+        try{
+            Utility.WriteOutput("Final Sotry (plain version) :", Color.RED, 16, true);
+            Utility.WriteOutput(finalStory, Color.BLACK, 12, true);
+            Utility.WriteOutput("\n", Color.BLACK, 1, true);
+            Utility.WriteOutput("Final Story (colored version)", Color.RED, 16, true);
+            Utility.writeHighlightedResult (finalStory, fragments, pureURIs);
+
+            Utility.WriteOutput("========", Color.RED, 16, true);
+            
+            Utility.printRunningTime(startingTime);
+            Utility.printStoryWordCount(finalStory);
+        }
+        catch (Exception e){
+            Utility.WriteOutput("An error happened: " + e.getMessage(), Color.RED, 10, true);
+        }
     }
 }
