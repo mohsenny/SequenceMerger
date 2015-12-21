@@ -426,16 +426,20 @@ public class Utility extends SequenceAssembler{
     public static void printResults(String finalStory, List<String> fragments, List<String> pureURIs, long startingTime)
     {
         try{
-            Utility.WriteOutput("Final Sotry (plain version) :", Color.RED, 16, true);
-            Utility.WriteOutput(finalStory, Color.BLACK, 12, true);
-            Utility.WriteOutput("\n", Color.BLACK, 1, true);
-            Utility.WriteOutput("Final Story (colored version)", Color.RED, 16, true);
-            Utility.writeHighlightedResult (finalStory, fragments, pureURIs);
+            if (finalStory.length() > 0)
+            {
+                Utility.WriteOutput("Final Sotry (plain version) :", Color.RED, 16, true);
+                Utility.WriteOutput(finalStory, Color.BLACK, 12, true);
+                Utility.WriteOutput("\n", Color.BLACK, 1, true);
+                Utility.WriteOutput("Final Story (colored version)", Color.RED, 16, true);
+                Utility.writeHighlightedResult (finalStory, fragments, pureURIs);
 
-            Utility.WriteOutput("========", Color.RED, 16, true);
+                Utility.WriteOutput("========", Color.RED, 16, true);
+
+                Utility.printStoryWordCount(finalStory);
+            }
             
             Utility.printRunningTime(startingTime);
-            Utility.printStoryWordCount(finalStory);
         }
         catch (Exception e){
             Utility.WriteOutput("An error happened: " + e.getMessage(), Color.RED, 10, true);
