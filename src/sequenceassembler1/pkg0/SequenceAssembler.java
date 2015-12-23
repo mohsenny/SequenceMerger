@@ -49,9 +49,6 @@ public class SequenceAssembler extends SwingWorker<Integer, Void>
     protected Integer doInBackground() throws Exception 
     {
         Long startingTime;
-        //Long endTime;
-        Date date = new Date();
-        startingTime = date.getTime();
         
         int num_of_frags = inputs.length;
         int window_length = window;
@@ -83,6 +80,9 @@ public class SequenceAssembler extends SwingWorker<Integer, Void>
         *   fragments_keywords[m, n] = n'th Keyword in m'th fragment 
         */
         
+        Date date = new Date();
+        startingTime = date.getTime();
+        
         Map<Integer, List<String>> fragments_keywords = new HashMap<Integer, List<String>>();  
         for (int i = 0; i < num_of_frags; i++)
         {
@@ -93,6 +93,7 @@ public class SequenceAssembler extends SwingWorker<Integer, Void>
         
         int iterationNumber = 0;
         int notNullSize = Utility.getMapNotNullSize(fragments_keywords);
+            
         boolean cannotBeCombinedAnymore = false;
 
         while (notNullSize >= 1)
@@ -142,15 +143,33 @@ public class SequenceAssembler extends SwingWorker<Integer, Void>
                     continue;
                 }
             }
-            
+            int old_window_length = window_length;
+            int old_match_rule = match_rule;
+            //List<Integer> previousNotNullIndices = Utility.getMapNotNullIncides(fragments_keywords);
             new_fragments_keywords = runApplication(fragments_keywords, num_of_frags, window_length, match_rule, helper, iterationNumber, outputText);
             notNullSize = Utility.getMapNotNullSize(new_fragments_keywords);
+            List<Integer> currentNotNullIndices = Utility.getMapNotNullIncides(fragments_keywords);
             iterationNumber++;     
             num_of_frags = new_fragments_keywords.size();
             // New window length
             window_length = Math.round((float)(window_length * windowFactor));
             // New match rule
             match_rule = Math.round((float)(match_rule * matchFactor));
+            
+            // Check if the algorithm has stcuked and is not going any furthure
+            if (old_match_rule == match_rule && old_window_length == window_length)
+            {
+                int size = new_fragments_keywords.size();
+                // Last story is our whole story, since we can't go any deeper anymore
+                List<String> last_story = new_fragments_keywords.get(size-1);
+                
+                // Clear the list and occupy it only with the last one
+                new_fragments_keywords.clear();
+                new_fragments_keywords.put(size-1, last_story);
+                notNullSize = 1;
+                continue;
+            }
+            
             // Reseting some of lists, sets, etc 
             Utility.PrepareForNextPhase(helper);
         }

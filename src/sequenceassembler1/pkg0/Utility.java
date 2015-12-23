@@ -434,7 +434,7 @@ public class Utility extends SequenceAssembler{
                 Utility.WriteOutput("Final Story (colored version)", Color.RED, 16, true);
                 Utility.writeHighlightedResult (finalStory, fragments, pureURIs);
 
-                Utility.WriteOutput("========", Color.RED, 16, true);
+                Utility.WriteOutput("===============", Color.RED, 16, true);
 
                 Utility.printStoryWordCount(finalStory);
             }
