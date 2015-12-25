@@ -445,4 +445,39 @@ public class Utility extends SequenceAssembler{
             Utility.WriteOutput("An error happened: " + e.getMessage(), Color.RED, 10, true);
         }
     }
+    
+    /**
+    * Returns true if only new stories are being merged pointlessly, or actually
+    * although W and M are the same, but old fragments still could be merged into new stories
+    * (in case new W and M are the same as old ones)
+    * @param text The original text that might contain incorrect spacing
+    */
+    public static boolean originalFragmentsAreNotCombinedAnymore(List<Integer> previousFragmentsIndices, List<Integer> currentFragmentsIndices)
+    {
+        boolean result = false;
+        
+        for (int i = 0; i < inputSize; i++)
+        {
+            int prev = previousFragmentsIndices.get(i);
+            int cur = currentFragmentsIndices.get(i);
+            if (prev <= inputSize - 1 || cur <= inputSize - 1)
+            {
+                if (prev == cur){
+                    result = true;
+                    continue;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            // Not sure about this case.....
+            else
+            {
+                break;
+            }
+        }
+        return result;
+        
+    }
 }

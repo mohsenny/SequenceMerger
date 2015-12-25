@@ -145,7 +145,7 @@ public class SequenceAssembler extends SwingWorker<Integer, Void>
             }
             int old_window_length = window_length;
             int old_match_rule = match_rule;
-            //List<Integer> previousNotNullIndices = Utility.getMapNotNullIncides(fragments_keywords);
+            List<Integer> previousNotNullIndices = Utility.getMapNotNullIncides(fragments_keywords);
             new_fragments_keywords = runApplication(fragments_keywords, num_of_frags, window_length, match_rule, helper, iterationNumber, outputText);
             notNullSize = Utility.getMapNotNullSize(new_fragments_keywords);
             List<Integer> currentNotNullIndices = Utility.getMapNotNullIncides(fragments_keywords);
@@ -156,18 +156,21 @@ public class SequenceAssembler extends SwingWorker<Integer, Void>
             // New match rule
             match_rule = Math.round((float)(match_rule * matchFactor));
             
-            // Check if the algorithm has stcuked and is not going any furthure
+            // Check if the algorithm has the potential to stuck
             if (old_match_rule == match_rule && old_window_length == window_length)
             {
-                int size = new_fragments_keywords.size();
-                // Last story is our whole story, since we can't go any deeper anymore
-                List<String> last_story = new_fragments_keywords.get(size-1);
-                
-                // Clear the list and occupy it only with the last one
-                new_fragments_keywords.clear();
-                new_fragments_keywords.put(size-1, last_story);
-                notNullSize = 1;
-                continue;
+                // Only if non of the original fragments are not being combiner anymore
+                if (Utility.originalFragmentsAreNotCombinedAnymore(previousNotNullIndices, currentNotNullIndices)){
+                    int size = new_fragments_keywords.size();
+                    // Last story is our whole story, since we can't go any deeper anymore
+                    List<String> last_story = new_fragments_keywords.get(size-1);
+
+                    // Clear the list and occupy it only with the last one
+                    new_fragments_keywords.clear();
+                    new_fragments_keywords.put(size-1, last_story);
+                    notNullSize = 1;
+                    continue;
+                }
             }
             
             // Reseting some of lists, sets, etc 
