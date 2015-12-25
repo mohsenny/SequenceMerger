@@ -11,8 +11,8 @@ Other libraries/JARs which must be imported to the project, but are not included
 * stanford-corenlp-3.3.1-sources.jar
 * jaws-bin.jar (WordNet library)
 
-* First 4 stanford CoreNLP libraries are available at http://stanfordnlp.github.io/CoreNLP/download.html
-* The last one, WordNet dictionary is available at https://wordnet.princeton.edu/wordnet/download/
+- First 4 stanford CoreNLP libraries are available at http://stanfordnlp.github.io/CoreNLP/download.html
+- The last one, WordNet dictionary is available at https://wordnet.princeton.edu/wordnet/download/
 
 While entering the inputs keep in mind that M must always be smaller that W
 
