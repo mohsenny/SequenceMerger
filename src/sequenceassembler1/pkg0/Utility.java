@@ -261,7 +261,7 @@ public class Utility extends SequenceAssembler{
             {
                 // Move the iterator one step backward, since in the last step we went forward once and it didn't match
                 wordsIter.previous();
-            }
+            } 
             int fragWithHighOccur = findMaxIndex(occurances);
             int[] RGBcolor = colors.get(fragWithHighOccur);
             float[] HSBcolor = Color.RGBtoHSB(RGBcolor[0], RGBcolor[1], RGBcolor[2], null);
@@ -269,7 +269,7 @@ public class Utility extends SequenceAssembler{
             if (occurancesStrings[fragWithHighOccur] == "" || occurancesStrings[fragWithHighOccur] == " ")
             {
                 //Highlighting process has failed
-                WriteOutput("[Due to not considering proper spacing and/or punctuation, highlighting process cannot go any further.]", Color.RED, 14, false); 
+                WriteOutput("[Due to lack of proper spacing and/or punctuation, highlighting process cannot go any further.]", Color.RED, 14, false); 
                 return;
             }
             else
@@ -306,23 +306,23 @@ public class Utility extends SequenceAssembler{
     
     public static void InitialColorsManually (Map<Integer, int[]> colors)
     {
-        colors.put(0, new int[] {102, 0, 0});
-        colors.put(1, new int[] {76, 153, 0});
-        colors.put(2, new int[] {0, 255, 255});
-        colors.put(3, new int[] {255, 102, 178});
-        colors.put(4, new int[] {0, 0, 0});
-        colors.put(5, new int[] {102, 51, 255});
-        colors.put(6, new int[] {229, 204, 0});
-        colors.put(7, new int[] {255, 0, 255});
-        colors.put(8, new int[] {255, 0, 0});
-        colors.put(9, new int[] {0, 204, 0});
+        colors.put(0, new int[] {102, 0, 0});       // 1
+        colors.put(1, new int[] {76, 153, 0});      // 2
+        colors.put(2, new int[] {0, 255, 255});     // 3
+        colors.put(3, new int[] {255, 102, 178});   // 4
+        colors.put(4, new int[] {0, 0, 0});         // 5
+        colors.put(5, new int[] {102, 51, 255});    // 6
+        colors.put(6, new int[] {229, 204, 0});     // 7
+        colors.put(7, new int[] {255, 0, 255});     // 8
+        colors.put(8, new int[] {255, 0, 0});       // 9
+        colors.put(9, new int[] {0, 204, 0});       //10
         
-        colors.put(10, new int[] {102, 102, 255});
-        colors.put(11, new int[] {0, 102, 102});
-        colors.put(12, new int[] {0, 153, 153});
-        colors.put(13, new int[] {255, 255, 0});
-        colors.put(14, new int[] {102, 178, 255});
-        colors.put(15, new int[] {255, 102, 178});
+        colors.put(10, new int[] {102, 102, 255});  // 11
+        colors.put(11, new int[] {0, 102, 102});    // 12
+        colors.put(12, new int[] {0, 153, 153});    // 13
+        colors.put(13, new int[] {255, 255, 0});    // 14
+        colors.put(14, new int[] {102, 178, 255});  // 15
+        colors.put(15, new int[] {169, 206, 50});   // 16
         colors.put(16, new int[] {0, 76, 153});
         colors.put(17, new int[] {96, 96, 96});
         colors.put(18, new int[] {153, 153, 0});
@@ -450,7 +450,8 @@ public class Utility extends SequenceAssembler{
     * Returns true if only new stories are being merged pointlessly, or actually
     * although W and M are the same, but old fragments still could be merged into new stories
     * (in case new W and M are the same as old ones)
-    * @param text The original text that might contain incorrect spacing
+    * @param previousFragmentsIndices A list containing the indices which still have fragments, from the previous iteration
+    * @param currentFragmentsIndices A list containing the indices which still have fragments, from the current iteration
     */
     public static boolean originalFragmentsAreNotCombinedAnymore(List<Integer> previousFragmentsIndices, List<Integer> currentFragmentsIndices)
     {
