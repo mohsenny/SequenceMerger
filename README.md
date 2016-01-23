@@ -11,13 +11,22 @@ Other libraries/JARs which must be imported to the project, but are not included
 * stanford-corenlp-3.3.1-sources.jar
 * jaws-bin.jar (WordNet library)
 
-- First 4 stanford CoreNLP libraries are available at http://stanfordnlp.github.io/CoreNLP/download.html
-- The last one, WordNet dictionary is available at https://wordnet.princeton.edu/wordnet/download/
+Note:
 
-While entering the inputs keep in mind that M must always be smaller that W
+1) First 4 stanford CoreNLP libraries are available at http://stanfordnlp.github.io/CoreNLP/download.html
+2) The last one, WordNet dictionary is available at https://wordnet.princeton.edu/wordnet/download/
+3) Import .jar files of all these libraries as external library to the NetBeans' project
+
+
+How to Use the Application:
+
+1) Choose some integer for Window Size and Match Size
+2) While entering the inputs keep in mind that M must always be smaller that W.
+3) Browse for some text files (*.txt) to import them as input
+4) Press Start
 
 
 If you are studying in University of Eastern Finland and are looking for more information regarding this applicaiton,
 please refer to my IT project "Sequence Assembler for Digital Storytelling" written by me, Mohsen Nasiri on Autumn of 2015.
 
-Any usage of this code with the purpose of education or futhur development is allowed. For other purposes please send an Email to mohsen.n89@gmail.com.
+Any usage of this code with the purpose of education or futhur development is allowed. For other purposes please send an Email to me at mohsen.n89@gmail.com.
